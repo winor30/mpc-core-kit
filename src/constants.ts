@@ -3,12 +3,18 @@ import { CHAIN_NAMESPACES, CustomChainConfig } from "@web3auth/base";
 
 export const DEFAULT_CHAIN_CONFIG: CustomChainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0x5",
-  rpcTarget: "https://rpc.ankr.com/eth_goerli",
-  displayName: "Goerli Testnet",
-  blockExplorer: "https://goerli.etherscan.io",
-  ticker: "ETH",
-  tickerName: "Ethereum",
+  // chainId: "0x5",
+  chainId: "0x13881", // hex of 80001
+  // rpcTarget: "https://rpc.ankr.com/eth_goerli",
+  rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
+  // displayName: "Goerli Testnet",
+  displayName: "Polygon Mumbai Testnet",
+  // blockExplorer: "https://goerli.etherscan.io",
+  blockExplorer: "https://mumbai.polygonscan.com/",
+  // ticker: "ETH",
+  ticker: "MATIC",
+  // tickerName: "Ethereum",
+  tickerName: "Matic",
   decimals: 18,
 };
 

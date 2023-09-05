@@ -2,15 +2,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable require-atomic-updates */
 /* eslint-disable @typescript-eslint/no-shadow */
+import { WEB3AUTH_NETWORK, Web3AuthMPCCoreKit } from "@web3auth/mpc-core-kit";
 import { useEffect, useState } from "react";
-import { Web3AuthMPCCoreKit, WEB3AUTH_NETWORK, LoginParams } from "@web3auth/mpc-core-kit"
 import Web3 from 'web3';
 import type { provider } from "web3-core";
 // import swal from "sweetalert";
 
+import { SafeEventEmitterProvider } from "@web3auth/base";
 import "./App.css";
 import { generateIdToken } from "./utils";
-import { SafeEventEmitterProvider } from "@web3auth/base";
 
 const uiConsole = (...args: any[]): void => {
   const el = document.querySelector("#console>p");
@@ -100,7 +100,7 @@ function App() {
         clientId:
 					'774338308167-q463s7kpvja16l4l0kko3nb925ikds2p.apps.googleusercontent.com',
       }
-  
+
       const provider = await coreKitInstance.connect({ subVerifierDetails: verifierConfig })
 
       if (provider) setProvider(provider)
@@ -131,7 +131,7 @@ function App() {
     uiConsole(loginResponse);
   };
 
-  const exportShare = async (): Promise<void> => { 
+  const exportShare = async (): Promise<void> => {
     if (!provider) {
       throw new Error('provider is not set.');
     }
@@ -140,7 +140,7 @@ function App() {
     uiConsole(share);
   }
 
-  const submitBackupShare = async (): Promise<void> => { 
+  const submitBackupShare = async (): Promise<void> => {
     if (!coreKitInstance) {
       throw new Error("coreKitInstance is not set");
     }
@@ -151,7 +151,7 @@ function App() {
 
   const savePasswordShare = async () => {
     try {
-      if (!coreKitInstance) { 
+      if (!coreKitInstance) {
         throw new Error("coreKitInstance is not set");
       }
       await coreKitInstance.addSecurityQuestionShare("What is your password?", password);
@@ -163,7 +163,7 @@ function App() {
 
   const updatePasswordShare = async () => {
     try {
-      if (!coreKitInstance) { 
+      if (!coreKitInstance) {
         throw new Error("coreKitInstance is not set");
       }
       await coreKitInstance.changeSecurityQuestionShare("What is your password?", password);
@@ -175,7 +175,7 @@ function App() {
 
   const deletePasswordShare = async () => {
     try {
-      if (!coreKitInstance) { 
+      if (!coreKitInstance) {
         throw new Error("coreKitInstance is not set");
       }
       await coreKitInstance.deleteSecurityQuestionShare("What is your password?");
@@ -186,14 +186,14 @@ function App() {
   }
 
   const recoverViaPassword = async () => {
-    if (!coreKitInstance) { 
+    if (!coreKitInstance) {
       throw new Error("coreKitInstance is not set");
     }
     await coreKitInstance.recoverSecurityQuestionShare("What is your password?", password);
     uiConsole('submitted');
     if (coreKitInstance.provider) setProvider(coreKitInstance.provider);
   }
-  
+
   const getChainID = async () => {
     if (!web3) {
       console.log("web3 not initialized yet");
@@ -275,7 +275,7 @@ function App() {
     const fromAddress = (await web3.eth.getAccounts())[0];
 
     const destination = "0x2E464670992574A613f10F7682D5057fB507Cc21";
-    const amount = web3.utils.toWei("0.0001"); // Convert 1 ether to wei
+    const amount = web3.utils.toWei("0"); // Convert 1 ether to wei
 
     // Submit transaction to the blockchain and wait for it to be mined
     uiConsole("Sending transaction...");
@@ -286,6 +286,17 @@ function App() {
     });
     uiConsole(receipt);
   };
+
+  const sendMultipleTransactions = async () => {
+    const n = 100;
+
+    for (let i = 0; i < n; i++) {
+      uiConsole(`Sending transaction ${i + 1} of ${n}...`);
+      await sendTransaction();
+      uiConsole(`Sent transaction ${i + 1} of ${n}...`);
+    }
+  }
+
 
   const loggedInView = (
     <>
@@ -368,6 +379,10 @@ function App() {
           Send Transaction
         </button>
 
+        <button onClick={sendMultipleTransactions} className="card">
+          Send Multiple Transactions
+        </button>
+
       </div>
 
       <div id="console" style={{ whiteSpace: "pre-line" }}>
@@ -395,7 +410,7 @@ function App() {
       <input value={mockVerifierId as string} onChange={(e) => setMockVerifierId(e.target.value)}></input>
 
       {
-        showBackupPhraseScreen && ( 
+        showBackupPhraseScreen && (
           <>
             <textarea value={seedPhrase as string} onChange={(e) => setSeedPhrase(e.target.value)}></textarea>
             <button onClick={submitBackupShare} className="card">
